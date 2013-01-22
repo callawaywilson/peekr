@@ -1,0 +1,22 @@
+._peekr {
+  position: absolute;
+  font-size: 11px;
+  font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+  color: #333;
+  line-height: 1.28; 
+  text-align: left;
+  direction: ltr;
+}
+
+._peekr_container {
+  background: white;
+  border: 1px solid #8C8C8C;
+  border: 1px solid rgba(0, 0, 0, .45);
+  border-bottom: 1px solid #666;
+  -moz-box-shadow: 0 3px 8px rgba(0, 0, 0, .3);
+  -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .3);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .3);
+  height: 150px;
+  width: 400px;
+} 
+
