@@ -1,0 +1,1 @@
+web: supervisor -- app.js --port=8888 --host=localhost:8888

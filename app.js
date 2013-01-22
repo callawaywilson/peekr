@@ -33,11 +33,16 @@ app.get("/data", function(request, response) {
 //Load loader.js into memory for fast serving
 var loader_js_content = fs.readFileSync("./api/loader.js", "utf8");
 var loader_css = fs.readFileSync("./api/loader.css", "utf8");
-var loader_js = ejs.render(loader_js_content, {css: loader_css});
-app.get("/loader.js", function(request, response) {
+var loader_js = ejs.render(loader_js_content, {css: loader_css, host: argv.host});
+app.get("/peekr.js", function(request, response) {
   response.setHeader("Content-Type", "text/javascript");
   response.send(loader_js)
 })
+
+app.get('*', function(req, res){
+  res.send('usage: GET http://'+argv.host+'/data?url=[url]', 404);
+});
+
 
 app.listen(argv.port);
 

@@ -16,7 +16,9 @@ module.exports = exports = function(options) {
     }, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         var doc = cheerio.load(body);
-        callback(getOG(doc));
+        var data = getOG(doc);
+        if (data.url == null) data.url = response.request.href;
+        callback(data);
       } else {
         console.log(error);
         callback({error: 'Could not load URL'});

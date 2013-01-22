@@ -19,6 +19,10 @@ var Peekr = function() {
   var data = {};
   var peekr = null;
 
+  //Dimensions:
+  var width = 300;
+  var height = 120;
+
   //Global Callback for JSONP data
   window._peekr_callback = function(id, href, ogData) {
     data[href] = ogData;
@@ -27,7 +31,7 @@ var Peekr = function() {
 
   function fetch(id, href) {
     var script = document.createElement('script');
-    script.src = "http://localhost:8888/data?id="+id+"&url="+encodeURIComponent(href);
+    script.src = "http://<%= host %>/data?id="+id+"&url="+encodeURIComponent(href);
     document.body.appendChild(script);
   };
 
@@ -62,6 +66,11 @@ var Peekr = function() {
     var offset = getOffset(targetEl);
     el.style.left = offset.left + "px";
     el.style.top = offset.top + 20 + "px";
+  };
+
+  //topLeft, topRight, bottomLeft, bottomRight
+  function positionQuadrant(el, targetEl) {
+
   };
 
   function div(styleClass, html) {
