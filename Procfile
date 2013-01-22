@@ -1,1 +1,1 @@
-web: node app.js --port=80 --host=peekr.herokuapp.com
+web: node app.js --host=peekr.herokuapp.com

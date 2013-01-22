@@ -5,6 +5,7 @@ var express = require('express')
   , ejs = require('ejs')
 
 var app = express();
+var port = process.env.PORT || argv.port || 5000;
 
 //GET /data/:URL
 app.get("/data", function(request, response) {
@@ -44,7 +45,7 @@ app.get('*', function(req, res){
 });
 
 
-app.listen(argv.port);
+app.listen(port);
 
 function jsonp(id, url, data) {
   return "_peekr_callback('"+id+"','"+url+"',"+JSON.stringify(data)+");"; 
