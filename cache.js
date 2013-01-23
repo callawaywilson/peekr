@@ -8,6 +8,7 @@ module.exports = exports = function(options) {
 
   var cache = 'peekr_urls';
   var ttl = options.ttl;
+  var cache_timeout = options.timeout || 250;
 
   function itemUrl(url) {
     return "https://cache-aws-us-east-1.iron.io/1" +
@@ -48,6 +49,7 @@ module.exports = exports = function(options) {
     var start = new Date().getTime();
     request({
       uri: itemUrl(url),
+      timeout: cache_timeout,
       headers: {
         "Content-Type": "application/json",
         "Authorization": "OAuth "+ options.token
@@ -61,7 +63,7 @@ module.exports = exports = function(options) {
         // console.log("CACHE Miss: [" + url + "]");
         callback(null);
       } else {
-        console.log("CACHE GET Error: " + error);
+        console.log("CACHE GET Error [" + url + "]: " + error);
         callback(null);
       }
     })

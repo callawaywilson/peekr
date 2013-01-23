@@ -11,7 +11,8 @@ var cache_ttl = process.env.IRON_CACHE_TTL || (argv.cache_ttl || (60 * 60))
 var cache = argv.no_cache ? null : new Cache({
   token: process.env.IRON_CACHE_TOKEN || argv.cache_token,
   project_id: process.env.IRON_CACHE_PROJECT_ID || argv.cache_project_id,
-  ttl: cache_ttl
+  ttl: cache_ttl,
+  timeout: process.env.IRON_CACHE_TIMEOUT || argv.cache_timeout
 });
 
 //GET /data/:URL
