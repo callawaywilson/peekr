@@ -6,10 +6,11 @@ var express = require('express')
   , Cache = require('./cache.js')
 
 var app = express();
-var port = process.env.PORT || (argv.port || 5000);
+
 var cache = argv.no_cache ? null : new Cache({
   token: process.env.IRON_CACHE_TOKEN || argv.cache_token,
-  project_id: process.env.IRON_CACHE_PROJECT_ID || argv.cache_project_id
+  project_id: process.env.IRON_CACHE_PROJECT_ID || argv.cache_project_id,
+  ttl: process.env.IRON_CACHE_TTL || (argv.cache_ttl || (60 * 60))
 });
 
 //GET /data/:URL
@@ -24,7 +25,7 @@ app.get("/data", function(request, response) {
       'Cache-Control': request.headers['cache-control']
     }
   });
-  page.parse(function(data) {
+  page.data(function(data) {
     if (request.query.id) {
       response.setHeader("Content-Type", "text/javascript");
       response.send(jsonp(request.query.id, request.query.url, data));
@@ -49,8 +50,8 @@ app.get('*', function(req, res){
   res.send('usage: GET http://'+argv.host+'/data?url=[url]', 404);
 });
 
-
-app.listen(port);
+// Listen on environment PORT, argument, or 5000.
+app.listen(process.env.PORT || (argv.port || 5000));
 
 function jsonp(id, url, data) {
   return "_peekr_callback('"+id+"','"+url+"',"+JSON.stringify(data)+");"; 

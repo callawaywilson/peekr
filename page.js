@@ -7,7 +7,7 @@ module.exports = exports = function(options) {
   var cache = options.cache;
   this.options = options;
 
-  this.parse = function(callback) {
+  this.data = function(callback) {
     var url = this.options.url;
     var headers = this.options.headers;
     if (cache) {
@@ -20,19 +20,23 @@ module.exports = exports = function(options) {
     }
   }
 
-  function getFromUrl(url, headers, callback) {
+  function getFromUrl(url, headers, callback) {  
+    var start = new Date().getTime();
     request({
       uri: url,
       headers: headers
     }, function (error, response, body) {
+      var elapsed = new Date().getTime() - start;
       if (!error && response.statusCode == 200) {
         var doc = cheerio.load(body);
         var data = getOG(doc);
         if (data.url == null) data.url = response.request.href;
         callback(data);
+        console.log("FETCH [" + url + "] in " + elapsed + "ms")
         if (cache && data) cache.put(url, data);
       } else {
-        console.log(error);
+        console.log("FETCH error [" + url + "] '" + error + 
+          "'' in " + elapsed + "ms");
         callback({error: 'Could not load URL'});
       }
     });

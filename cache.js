@@ -4,9 +4,10 @@ module.exports = exports = function(options) {
 
   if (options.token == null) throw "token is required";
   if (options.project_id == null) throw "project_id is required";
+  if (options.ttl == null) throw "ttl is required";
 
   var cache = 'peekr_urls';
-  var ttl = options.ttl || 360;
+  var ttl = options.ttl;
 
   function itemUrl(url) {
     return "https://cache-aws-us-east-1.iron.io/1" +
@@ -34,11 +35,11 @@ module.exports = exports = function(options) {
       }
     }, function(error, response, body) {
       if (!error && response.statusCode == 200) {
-        console.log("Cache PUT: [" + url + "]");
+        // console.log("CACHE PUT: [" + url + "]");
       } else if (!error && response.statusCode == 404) {
-        console.log("Cache PUT Miss: [" + url + "]:" + JSON.stringify(body));
+        console.log("CACHE PUT miss: [" + url + "]:" + JSON.stringify(body));
       } else {
-        console.log("Cache PUT Error: " + error + ": " + JSON.stringify(body));
+        console.log("CACHE PUT error: " + error + ": " + JSON.stringify(body));
       }
     })
   }
@@ -54,13 +55,13 @@ module.exports = exports = function(options) {
     }, function(error, response, body) {
       if (!error && response.statusCode == 200) {
         var elapsed = new Date().getTime() - start;
-        console.log("Cache Hit: [" + url + "] in " + elapsed + "ms");
+        console.log("CACHE [" + url + "] in " + elapsed + "ms");
         callback(JSON.parse(JSON.parse(body).value));
       } else if (!error && response.statusCode == 404) {
-        console.log("Cache Miss: [" + url + "]");
+        // console.log("CACHE Miss: [" + url + "]");
         callback(null);
       } else {
-        console.log("Cache GET Error: " + error);
+        console.log("CACHE GET Error: " + error);
         callback(null);
       }
     })
