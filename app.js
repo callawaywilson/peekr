@@ -7,10 +7,11 @@ var express = require('express')
 
 var app = express();
 
+var cache_ttl = process.env.IRON_CACHE_TTL || (argv.cache_ttl || (60 * 60))
 var cache = argv.no_cache ? null : new Cache({
   token: process.env.IRON_CACHE_TOKEN || argv.cache_token,
   project_id: process.env.IRON_CACHE_PROJECT_ID || argv.cache_project_id,
-  ttl: process.env.IRON_CACHE_TTL || (argv.cache_ttl || (60 * 60))
+  ttl: cache_ttl
 });
 
 //GET /data/:URL
@@ -26,6 +27,8 @@ app.get("/data", function(request, response) {
     }
   });
   page.data(function(data) {
+    response.setHeader("Cache-Control", 
+      "max-age=" + cache_ttl + ", must-revalidate");
     if (request.query.id) {
       response.setHeader("Content-Type", "text/javascript");
       response.send(jsonp(request.query.id, request.query.url, data));

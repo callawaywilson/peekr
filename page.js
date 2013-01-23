@@ -36,7 +36,7 @@ module.exports = exports = function(options) {
         if (cache && data) cache.put(url, data);
       } else {
         console.log("FETCH error [" + url + "] '" + error + 
-          "'' in " + elapsed + "ms");
+          "' in " + elapsed + "ms");
         callback({error: 'Could not load URL'});
       }
     });
