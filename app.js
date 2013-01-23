@@ -25,7 +25,7 @@ app.get("/data", function(request, response) {
     cache: cache,
     url: request.query.url,
     headers: {
-      'User-Agent': request.headers['user-agent'],
+      'User-Agent': 'Express',
       'Accept': request.headers['accept'],
       'Accept-Language': request.headers['accept-language'],
       'Cache-Control': request.headers['cache-control']
