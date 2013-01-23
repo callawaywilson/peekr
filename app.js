@@ -25,8 +25,10 @@ app.get("/data", function(request, response) {
     cache: cache,
     url: request.query.url,
     headers: {
-      'User-Agent': 'curl/7.19.7 (x86_64-pc-linux-gnu) libcurl/7.19.7 OpenSSL/0.9.8k zlib/1.2.3.3 libidn/1.15',
-      'Accept': request.headers['accept']
+      'User-Agent': request.headers['user-agent'],
+      'Accept': request.headers['accept'],
+      'Accept-Language': request.headers['accept-language'],
+      'Cache-Control': request.headers['cache-control']
     }
   });
   page.data(function(data) {

@@ -9,9 +9,7 @@ module.exports = exports = function(options) {
 
   this.data = function(callback) {
     var uri = this.options.url;
-    var headers = this.options.headers;
-    var host = url.parse(uri).hostname
-    headers.host = host;
+    var headers = this.options.headers;\
     if (cache) {
       cache.get(uri, function(data) {
         if (data) callback(data);
