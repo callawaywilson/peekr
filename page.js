@@ -8,15 +8,17 @@ module.exports = exports = function(options) {
   this.options = options;
 
   this.data = function(callback) {
-    var url = this.options.url;
+    var uri = this.options.url;
     var headers = this.options.headers;
+    var host = url.parse(uri).hostname
+    headers.host = host;
     if (cache) {
-      cache.get(url, function(data) {
+      cache.get(uri, function(data) {
         if (data) callback(data);
-        else getFromUrl(url, headers, callback);
+        else getFromUrl(uri, headers, callback);
       })
     } else {
-      getFromUrl(url, headers, callback);
+      getFromUrl(uri, headers, callback);
     }
   }
 

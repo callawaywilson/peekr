@@ -25,7 +25,7 @@ app.get("/data", function(request, response) {
     cache: cache,
     url: request.query.url,
     headers: {
-      'User-Agent': 'Express',
+      'User-Agent': request.headers['user-agent'],
       'Accept': request.headers['accept']
     }
   });
