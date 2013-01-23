@@ -16,6 +16,10 @@ var cache = argv.no_cache ? null : new Cache({
 
 //GET /data/:URL
 app.get("/data", function(request, response) {
+  if (!request.query.url) {
+    response.send(usage());
+    return;
+  }
   var page = new Page({
     cache: cache,
     url: request.query.url,
@@ -27,8 +31,7 @@ app.get("/data", function(request, response) {
     }
   });
   page.data(function(data) {
-    response.setHeader("Cache-Control", 
-      "max-age=" + cache_ttl + ", must-revalidate");
+    response.setHeader("Cache-Control", "public, max-age=" + cache_ttl);
     if (request.query.id) {
       response.setHeader("Content-Type", "text/javascript");
       response.send(jsonp(request.query.id, request.query.url, data));
@@ -50,7 +53,7 @@ app.get("/peekr.js", function(request, response) {
 })
 
 app.get('*', function(req, res){
-  res.send('usage: GET http://'+argv.host+'/data?url=[url]', 404);
+  res.send(usage(), 404);
 });
 
 // Listen on environment PORT, argument, or 5000.
@@ -58,4 +61,8 @@ app.listen(process.env.PORT || (argv.port || 5000));
 
 function jsonp(id, url, data) {
   return "_peekr_callback('"+id+"','"+url+"',"+JSON.stringify(data)+");"; 
+}
+
+function usage() {
+  return 'usage: GET http://'+argv.host+'/data?url=[url]';
 }
