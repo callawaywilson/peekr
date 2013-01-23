@@ -32,7 +32,7 @@ app.get("/data", function(request, response) {
     }
   });
   page.data(function(data) {
-    response.setHeader("Cache-Control", "public, max-age=" + cache_ttl);
+    if (data && data.url) setCacheHeaders(response); // Cache if has URL parameter
     if (request.query.id) {
       response.setHeader("Content-Type", "text/javascript");
       response.send(jsonp(request.query.id, request.query.url, data));
@@ -66,4 +66,9 @@ function jsonp(id, url, data) {
 
 function usage() {
   return 'usage: GET http://'+argv.host+'/data?url=[url]';
+}
+
+function setCacheHeaders(response) {
+  response.setHeader("Cache-Control", "public, max-age=" + cache_ttl);
+  response.setHeader("Expires", new Date(Date.now() + cache_ttl*1000).toUTCString());
 }

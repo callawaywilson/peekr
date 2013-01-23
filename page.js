@@ -94,6 +94,9 @@ module.exports = exports = function(options) {
       if (elAttrEq($(this), 'name', 'description')) 
         desc = $(this).attr('content');
     })
+    if (!desc) {
+      desc = findContent(['p', 'h1', 'h2', 'h3'], $);
+    }
     return desc;
   }
 
@@ -101,6 +104,16 @@ module.exports = exports = function(options) {
     return el.attr(attrName) &&
       el.attr(attrName).toLowerCase &&
       el.attr(attrName).toLowerCase() == attrValue.toLowerCase();
+  }
+
+  function findContent(selectors, $) {
+    for (var i = 0; i < selectors.length; i++) {
+      var els = $(selectors[i]);
+      if (els.length > 0) {
+        var t = els.first().text();
+        if (t && t.length > 0) return t.substring(0,100);
+      }
+    }
   }
 
 }
