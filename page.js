@@ -4,26 +4,38 @@ var request = require('request')
 
 module.exports = exports = function(options) {
 
-  var defaults = {
-    timeout: 5000
-  }
+  var cache = options.cache;
   this.options = options;
 
   this.parse = function(callback) {
+    var url = this.options.url;
+    var headers = this.options.headers;
+    if (cache) {
+      cache.get(url, function(data) {
+        if (data) callback(data);
+        else getFromUrl(url, headers, callback);
+      })
+    } else {
+      getFromUrl(url, headers, callback);
+    }
+  }
+
+  function getFromUrl(url, headers, callback) {
     request({
-      uri: this.options.url,
-      headers: this.options.headers
+      uri: url,
+      headers: headers
     }, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         var doc = cheerio.load(body);
         var data = getOG(doc);
         if (data.url == null) data.url = response.request.href;
         callback(data);
+        if (cache && data) cache.put(url, data);
       } else {
         console.log(error);
         callback({error: 'Could not load URL'});
       }
-    })
+    });
   }
 
   function getOG($) {
@@ -53,15 +65,21 @@ module.exports = exports = function(options) {
   function getImage($) {
     var src = null;
     $('link').each(function() {
-      if (elAttrEq($(this), 'rel', 'image_src')) src = $(this).attr('href');
-      else if (elAttrEq($(this), 'rel', 'image')) src = $(this).attr('href');
-      else if (elAttrEq($(this), 'rel', 'icon')) src = $(this).attr('href');
+      if (elAttrEq($(this), 'rel', 'image_src')) 
+        src = $(this).attr('href');
+      else if (elAttrEq($(this), 'rel', 'image')) 
+        src = $(this).attr('href');
+      else if (elAttrEq($(this), 'rel', 'icon')) 
+        src = $(this).attr('href');
     });
     if (src == null) {
       $('meta').each(function() {
-        if (elAttrEq($(this), 'itemprop', 'image')) src = $(this).attr('content');
-        else if (elAttrEq($(this), 'name', 'image')) src = $(this).attr('content');
-        else if (elAttrEq($(this), 'link', 'image')) src = $(this).attr('content');
+        if (elAttrEq($(this), 'itemprop', 'image')) 
+          src = $(this).attr('content');
+        else if (elAttrEq($(this), 'name', 'image')) 
+          src = $(this).attr('content');
+        else if (elAttrEq($(this), 'link', 'image')) 
+          src = $(this).attr('content');
       })
     }
     return src;
@@ -69,7 +87,8 @@ module.exports = exports = function(options) {
   function getDescription($) {
     var desc = null;
     $('meta').each(function() {
-      if (elAttrEq($(this), 'name', 'description')) desc = $(this).attr('content');
+      if (elAttrEq($(this), 'name', 'description')) 
+        desc = $(this).attr('content');
     })
     return desc;
   }

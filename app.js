@@ -3,14 +3,19 @@ var express = require('express')
   , Page = require("./page.js")
   , argv = require('optimist').argv
   , ejs = require('ejs')
+  , Cache = require('./cache.js')
 
 var app = express();
-var port = process.env.PORT || argv.port || 5000;
+var port = process.env.PORT || (argv.port || 5000);
+var cache = argv.no_cache ? null : new Cache({
+  token: process.env.IRON_CACHE_TOKEN || argv.cache_token,
+  project_id: process.env.IRON_CACHE_PROJECT_ID || argv.cache_project_id
+});
 
 //GET /data/:URL
 app.get("/data", function(request, response) {
-  console.log(request.query);
   var page = new Page({
+    cache: cache,
     url: request.query.url,
     headers: {
       'User-Agent': request.headers['user-agent'],
