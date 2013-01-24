@@ -36,11 +36,11 @@ module.exports = exports = function(options) {
         if (cache && data) cache.put(url, data);
       } else {
         console.log("FETCH error [" + url + "] " + 
-          "HTTP " + response.statusCode + 
+          "HTTP " + (response ? response.statusCode : 'no response') + 
           " '" + error + "' in " + elapsed + "ms");
         callback({
           error: 'Could not load URL', 
-          url: response.request.href
+          url: (response ? response.statusCode : null)
         });
       }
     });
