@@ -1,3 +1,6 @@
+if (process.env.NEW_RELIC_APP_NAME) 
+  var newrelic = require("newrelic");
+
 var express = require('express')
   , fs = require('fs')
   , Page = require("./page.js")
