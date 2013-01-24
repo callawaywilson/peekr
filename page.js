@@ -79,6 +79,8 @@ module.exports = exports = function(options) {
         src = $(this).attr('href');
       else if (elAttrEq($(this), 'rel', 'icon')) 
         src = $(this).attr('href');
+      else if (elAttrEq($(this), 'rel', 'apple-touch-icon')) 
+        src = $(this).attr('href');
     });
     if (src == null) {
       $('meta').each(function() {
@@ -115,7 +117,7 @@ module.exports = exports = function(options) {
       var els = $(selectors[i]);
       if (els.length > 0) {
         var t = els.first().text();
-        if (t && t.length > 0) return t.substring(0,100);
+        if (t && t.length > 0) return t.substring(0,300);
       }
     }
   }
