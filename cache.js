@@ -38,7 +38,7 @@ module.exports = exports = function(options) {
       if (!error && response.statusCode == 200) {
         // console.log("CACHE PUT: [" + url + "]");
       } else if (!error && response.statusCode == 404) {
-        console.log("CACHE PUT miss: [" + url + "]:" + JSON.stringify(body));
+        console.log("CACHE PUT miss: url:[" + url + "]:" + JSON.stringify(body));
       } else {
         console.log("CACHE PUT error: " + error + ": " + JSON.stringify(body));
       }
@@ -57,13 +57,13 @@ module.exports = exports = function(options) {
     }, function(error, response, body) {
       if (!error && response.statusCode == 200) {
         var elapsed = new Date().getTime() - start;
-        console.log("CACHE [" + url + "] in " + elapsed + "ms");
+        console.log("CACHE url:[" + url + "] in " + elapsed + "ms");
         callback(JSON.parse(JSON.parse(body).value));
       } else if (!error && response.statusCode == 404) {
         // console.log("CACHE Miss: [" + url + "]");
         callback(null);
       } else {
-        console.log("CACHE GET Error [" + url + "]: " + error);
+        console.log("CACHE GET Error url:[" + url + "]: " + error);
         callback(null);
       }
     })

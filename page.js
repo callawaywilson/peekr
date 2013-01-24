@@ -32,7 +32,7 @@ module.exports = exports = function(options) {
         var data = getOG(doc);
         if (data.url == null) data.url = response.request.href;
         callback(data);
-        console.log("FETCH [" + url + "] in " + elapsed + "ms")
+        console.log("FETCH url:[" + url + "] in " + elapsed + "ms")
         if (cache && data) cache.put(url, data);
       } else {
         var data = {
@@ -40,7 +40,7 @@ module.exports = exports = function(options) {
           url: (response ? response.request.href : null)
         }
         callback(data);
-        console.log("FETCH error [" + url + "] " + 
+        console.log("FETCH error url:[" + url + "] " + 
           "HTTP " + (response ? response.statusCode : 'no response') + 
           " '" + error + "' in " + elapsed + "ms");
         if (errorCacheable(response)) cache.put(url, data);
