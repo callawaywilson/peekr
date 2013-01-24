@@ -40,7 +40,7 @@ module.exports = exports = function(options) {
           " '" + error + "' in " + elapsed + "ms");
         callback({
           error: 'Could not load URL', 
-          url: (response ? response.statusCode : null)
+          url: (response ? response.request.href : null)
         });
       }
     });

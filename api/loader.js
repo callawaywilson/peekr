@@ -120,12 +120,12 @@ var Peekr = function() {
 
   var open = function(el) {
     if (el.href == null) throw "Element must have href";
-    var id = "_peekr_" + curID++;
+    var id = curID++;
     if (dataCache[el.href]) popover(el, dataCache[el.href]);
     else {
       els[id] = el;
       fetch(id, el.href, function(data) {
-        dataCache[href] = data;
+        dataCache[el.href] = data;
         popover(els[id], data);
       });
     }
@@ -142,4 +142,21 @@ var Peekr = function() {
     data: data
   };
 
-}()
+}();
+
+if (typeof jQuery != 'undefined') {  
+  (function( $ ) {
+    $.fn.attachPeekr = function() {
+      return this.each(function() {
+        if (!$(this).attr("href")) throw "Peekr requires an href";
+        Peekr.attach(this);
+      });
+    };
+    $.fn.urlMetaData = function(callback) {
+      return this.each(function() {
+        if (!$(this).attr("href")) throw "Peekr requires an href";
+        Peekr.data($(this).attr("href"), callback);
+      });
+    };
+  })( jQuery );
+}

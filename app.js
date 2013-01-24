@@ -55,9 +55,18 @@ app.get("/peekr.js", function(request, response) {
   response.send(loader_js)
 })
 
-app.get('*', function(req, res){
-  res.send(usage(), 404);
-});
+//GET robots.txt
+var robotstxt = fs.readFileSync("./api/robots.txt", "utf8");
+app.get("/robots.txt", function(req, res){
+  res.setHeader("Content-Type", "text/plain");
+  res.send(robotstxt)
+})
+
+//404
+app.use(function(req, res){
+  res.setHeader("Content-Type", "text/plain");
+  res.send(usage(), 404)
+})
 
 // Listen on environment PORT, argument, or 5000.
 var port = process.env.PORT || (argv.port || 5000);
@@ -69,7 +78,7 @@ function jsonp(callback, url, data) {
 }
 
 function usage() {
-  return 'usage: GET http://'+argv.host+'/data?url=[url]';
+  return 'usage: GET http://'+argv.host+'/data?url=[url]\n';
 }
 
 function setCacheHeaders(response) {
