@@ -25,14 +25,14 @@ app.get("/data", function(request, response) {
     cache: cache,
     url: request.query.url,
     headers: {
-      'User-Agent': request.headers['user-agent'],
+      'User-Agent': 'facebookexternalhit',
       'Accept': request.headers['accept'],
       'Accept-Language': request.headers['accept-language'],
       'Cache-Control': request.headers['cache-control']
     }
   });
   page.data(function(data) {
-    if (data && data.url) setCacheHeaders(response); // Cache if has URL parameter
+    if (data && data.url && !data.error) setCacheHeaders(response); // Cache if has URL parameter
     if (request.query.callback) {
       response.setHeader("Content-Type", "text/javascript");
       response.send(jsonp(request.query.callback, request.query.url, data));
@@ -58,7 +58,9 @@ app.get('*', function(req, res){
 });
 
 // Listen on environment PORT, argument, or 5000.
-app.listen(process.env.PORT || (argv.port || 5000));
+var port = process.env.PORT || (argv.port || 5000);
+console.log("Listening on port " + process.env.PORT);
+app.listen(port);
 
 function jsonp(callback, url, data) {
   return callback+"("+JSON.stringify(data)+");"; 

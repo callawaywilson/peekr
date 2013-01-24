@@ -23,13 +23,11 @@ var Peekr = function() {
   var width = 300;
   var height = 120;
 
-  //Global Callback for JSONP data
-  window._peekr_callback = function(id, href, ogData) {
-    data[href] = ogData;
-    popover(els[id], ogData);
-  };
-
   function fetch(id, href) {
+    window['_peekr_callback_'+id] = function(id, href, ogData) {
+      data[href] = ogData;
+      popover(els[id], ogData);
+    };
     var script = document.createElement('script');
     script.src = "http://<%= host %>/data?id="+id+"&url="+encodeURIComponent(href);
     document.body.appendChild(script);
