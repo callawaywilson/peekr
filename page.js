@@ -35,13 +35,15 @@ module.exports = exports = function(options) {
         console.log("FETCH [" + url + "] in " + elapsed + "ms")
         if (cache && data) cache.put(url, data);
       } else {
+        var data = {
+          error: 'Could not load URL', 
+          url: (response ? response.request.href : null)
+        }
+        callback(data);
         console.log("FETCH error [" + url + "] " + 
           "HTTP " + (response ? response.statusCode : 'no response') + 
           " '" + error + "' in " + elapsed + "ms");
-        callback({
-          error: 'Could not load URL', 
-          url: (response ? response.request.href : null)
-        });
+        if (errorCacheable(response)) cache.put(url, data);
       }
     });
   }
@@ -120,6 +122,13 @@ module.exports = exports = function(options) {
         if (t && t.length > 0) return t.substring(0,300);
       }
     }
+  }
+
+  function errorCacheable(response) {
+    return response && (
+        response.statusCode == 403 ||
+        response.statusCode == 404
+      );
   }
 
 }
