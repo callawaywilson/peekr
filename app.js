@@ -4,6 +4,7 @@ var express = require('express')
   , argv = require('optimist').argv
   , ejs = require('ejs')
   , Cache = require('./cache.js')
+  , UglifyJS = require("uglify-js")
 
 var app = express();
 
@@ -45,9 +46,7 @@ app.get("/data", function(request, response) {
 
 //GET /loader.js
 //Load loader.js into memory for fast serving
-var loader_js_content = fs.readFileSync("./api/loader.js", "utf8");
-var loader_css = fs.readFileSync("./api/loader.css", "utf8");
-var loader_js = ejs.render(loader_js_content, {css: loader_css, host: argv.host});
+var loader_js = getLoaderJS();
 app.get("/peekr.js", function(request, response) {
   response.setHeader("Content-Type", "text/javascript");
   response.send(loader_js)
@@ -73,4 +72,13 @@ function usage() {
 function setCacheHeaders(response) {
   response.setHeader("Cache-Control", "public, max-age=" + cache_ttl);
   response.setHeader("Expires", new Date(Date.now() + cache_ttl*1000).toUTCString());
+}
+
+function getLoaderJS() {
+  var pro = require("uglify-js").uglify;
+  var loader_js_content = fs.readFileSync("./api/loader.js", "utf8");
+  var loader_css = fs.readFileSync("./api/loader.css", "utf8");
+  var loader_js = ejs.render(loader_js_content, {css: loader_css, host: argv.host});
+  if (argv.no_minify) return loader_js;
+  return UglifyJS.minify(loader_js, {fromString:true}).code;
 }

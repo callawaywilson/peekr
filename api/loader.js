@@ -16,20 +16,21 @@ var Peekr = function() {
 
   var curID = 0;
   var els = {};
-  var data = {};
+  var dataCache = {};
   var peekr = null;
+
+  var callbackPrefix = "_peekr_callback_";
 
   //Dimensions:
   var width = 300;
   var height = 120;
 
-  function fetch(id, href) {
-    window['_peekr_callback_'+id] = function(id, href, ogData) {
-      data[href] = ogData;
-      popover(els[id], ogData);
-    };
+  function fetch(id, href, callback) {
+    var callbackName = callbackPrefix + id;
+    window[callbackName] = callback;
     var script = document.createElement('script');
-    script.src = "http://<%= host %>/data?id="+id+"&url="+encodeURIComponent(href);
+    script.src = "http://<%= host %>/data?callback=" + callbackName + 
+      "&url=" + encodeURIComponent(href);
     document.body.appendChild(script);
   };
 
@@ -120,16 +121,25 @@ var Peekr = function() {
   var open = function(el) {
     if (el.href == null) throw "Element must have href";
     var id = "_peekr_" + curID++;
-    if (data[el.href]) popover(el, data[el.href]);
+    if (dataCache[el.href]) popover(el, dataCache[el.href]);
     else {
       els[id] = el;
-      fetch(id, el.href);
+      fetch(id, el.href, function(data) {
+        dataCache[href] = data;
+        popover(els[id], data);
+      });
     }
   };
 
+  var data = function(url, callback) {
+    var id = curID++;
+    fetch(id, url, callback);
+  }
+
   return {
     attach: attach,
-    open: open
+    open: open,
+    data: data
   };
 
 }()
