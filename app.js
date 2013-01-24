@@ -33,9 +33,9 @@ app.get("/data", function(request, response) {
   });
   page.data(function(data) {
     if (data && data.url) setCacheHeaders(response); // Cache if has URL parameter
-    if (request.query.id) {
+    if (request.query.callback) {
       response.setHeader("Content-Type", "text/javascript");
-      response.send(jsonp(request.query.id, request.query.url, data));
+      response.send(jsonp(request.query.callback, request.query.url, data));
     } else {
       response.setHeader("Content-Type", "application/json");
       response.send(JSON.stringify(data));
@@ -60,8 +60,8 @@ app.get('*', function(req, res){
 // Listen on environment PORT, argument, or 5000.
 app.listen(process.env.PORT || (argv.port || 5000));
 
-function jsonp(id, url, data) {
-  return "_peekr_callback('"+id+"','"+url+"',"+JSON.stringify(data)+");"; 
+function jsonp(callback, url, data) {
+  return callback+"("+JSON.stringify(data)+");"; 
 }
 
 function usage() {
