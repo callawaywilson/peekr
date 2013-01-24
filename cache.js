@@ -7,7 +7,7 @@ module.exports = exports = function(options) {
   if (options.ttl == null) throw "ttl is required";
 
   var cache = 'peekr_urls';
-  var ttl = options.ttl;
+  var ttl = parseInt(options.ttl, 10);
   var cache_timeout = options.timeout || 250;
 
   function itemUrl(url) {
