@@ -38,7 +38,10 @@ module.exports = exports = function(options) {
         console.log("FETCH error [" + url + "] " + 
           "HTTP " + response.statusCode + 
           " '" + error + "' in " + elapsed + "ms");
-        callback({error: 'Could not load URL'});
+        callback({
+          error: 'Could not load URL', 
+          url: response.request.href
+        });
       }
     });
   }
