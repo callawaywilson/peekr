@@ -1,1 +1,1 @@
-web: node app.js --host=peekr.herokuapp.com
+web: node app.js

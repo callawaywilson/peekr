@@ -11,6 +11,8 @@ var express = require('express')
 
 var app = express();
 
+var host = process.env.HOST || argv.host;
+
 var cache_ttl = process.env.IRON_CACHE_TTL || (argv.cache_ttl || (60 * 60))
 var cache = argv.no_cache ? null : new Cache({
   token: process.env.IRON_CACHE_TOKEN || argv.cache_token,
@@ -90,7 +92,7 @@ function getLoaderJS() {
   var pro = require("uglify-js").uglify;
   var loader_js_content = fs.readFileSync("./api/loader.js", "utf8");
   var loader_css = fs.readFileSync("./api/loader.css", "utf8");
-  var loader_js = ejs.render(loader_js_content, {css: loader_css, host: argv.host});
+  var loader_js = ejs.render(loader_js_content, {css: loader_css, host: host});
   if (argv.no_minify) return loader_js;
   return UglifyJS.minify(loader_js, {fromString:true}).code;
 }
