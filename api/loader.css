@@ -3,10 +3,10 @@
   position: absolute;
   z-index: 99999;
   color: #333;
-  transition: opacity 0.05s; 
-  -webkit-transition: opacity 0.05s; 
-  -moz-transition: opacity 0.05s; 
-  -o-transition: opacity 0.05s;
+  transition: opacity 0.2s; 
+  -webkit-transition: opacity 0.2s; 
+  -moz-transition: opacity 0.2s; 
+  -o-transition: opacity 0.2s;
 }
 ._peekr ._peekr_container {
   font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
