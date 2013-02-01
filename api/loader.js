@@ -144,9 +144,6 @@ var Peekr = function() {
     if (offset.top - 12 - div.clientHeight - 10 - scroll.scrollTop < 0) {
       pos = 'bottom_';
     } 
-    console.log(x);
-    console.log(div.clientWidth);
-    console.log(document.documentElement.clientWidth);
     if (x + div.clientWidth - 10 > document.documentElement.clientWidth) {
       pos += "right";
     } else {
