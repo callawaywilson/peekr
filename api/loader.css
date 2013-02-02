@@ -11,7 +11,7 @@
 ._peekr ._peekr_container {
   font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
   position: relative;
-  /*overflow: hidden;*/
+  text-align: left;
   background-color: white;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -50,7 +50,7 @@
   border: 3px solid #fff;
   background-size: cover;
   background-position: top center;
-  background-color: #AAAAAA;
+  background-color: #ffffff;
   overflow: hidden;
 }
 ._peekr ._peekr_title {
@@ -98,7 +98,7 @@
 ._peekr ._peekr_container_full ._peekr_description {
   padding-left: 105px;
   margin-bottom: 3px;
-  height: 50px;
+  height: 48px;
   overflow: hidden;
 }
 
