@@ -48,6 +48,12 @@ module.exports = exports = function(options) {
     });
   }
 
+  function getAttr(el, attribute) {
+    for (var i = 0; i < el.length; i++) {
+      if (el[i].attribs[attribute]) return el[i].attribs[attribute];
+    }
+  } 
+
   function getOG($) {
     var data = {}
       , ns = "og"
@@ -55,7 +61,7 @@ module.exports = exports = function(options) {
       var prop = $(this).attr("property"), key, value;
       if (prop && prop.substring(0, ns.length) === ns) {
         key = prop.substring(ns.length + 1);
-        value = $(this).attr("content");
+        value = getAttr($(this), "content");
         data[key] = value;
       }
     });
@@ -79,9 +85,9 @@ module.exports = exports = function(options) {
         src = $(this).attr('href');
       else if (elAttrEq($(this), 'rel', 'image')) 
         src = $(this).attr('href');
-      else if (elAttrEq($(this), 'rel', 'icon')) 
-        src = $(this).attr('href');
       else if (elAttrEq($(this), 'rel', 'apple-touch-icon')) 
+        src = $(this).attr('href');
+      else if (elAttrEq($(this), 'rel', 'apple-touch-icon-precomposed')) 
         src = $(this).attr('href');
     });
     if (src == null) {
@@ -100,7 +106,7 @@ module.exports = exports = function(options) {
     var desc = null;
     $('meta').each(function() {
       if (elAttrEq($(this), 'name', 'description')) 
-        desc = $(this).attr('content');
+        desc = getAttr($(this), "content");
     })
     if (!desc) {
       desc = findContent(['p', 'h1', 'h2', 'h3'], $);

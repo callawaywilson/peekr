@@ -144,7 +144,7 @@ var Peekr = function() {
     if (offset.top - 12 - div.clientHeight - 10 - scroll.scrollTop < 0) {
       pos = 'bottom_';
     } 
-    if (x + div.clientWidth - 10 > document.documentElement.clientWidth) {
+    if (x + div.clientWidth + 20 > document.documentElement.clientWidth) {
       pos += "right";
     } else {
       pos += "left";
@@ -164,14 +164,15 @@ var Peekr = function() {
   };
 
   function image(data) {
-    if (data.image && data.image.indexOf("//" == 0)) return "http:" + data.image;
+    console.log(data.image);
+    if (data.image && data.image.indexOf("\/\/") == 0) return "http:" + data.image;
     if (data.image && data.image.indexOf("http") == 0) return data.image;
     function hostname(data) {
       var a = document.createElement ('a');
       a.href = data.url;
       return a.protocol + "//" + a.hostname;
     }
-    if (data.image) return hostname(data) + data.image;
+    if (data.image) return hostname(data) + "/" + data.image;
   }
 
   function getOffset(obj) {

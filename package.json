@@ -12,7 +12,8 @@
     "ejs": "0.8.3",
     "uglify-js": "2.2.3",
     "ttl-lru-cache": "0.0.2",
-    "newrelic": "0.9.x"
+    "newrelic": "0.9.x",
+    "entities" : "0.x"
   },
   "engines": {
     "node": "0.8.x",
