@@ -9,6 +9,7 @@ module.exports = exports = function(options) {
 
   this.data = function(callback) {
     var uri = this.options.url;
+    if (uri.indexOf("http") != 0) uri = "http://" + uri;
     var headers = this.options.headers;
     if (cache) {
       cache.get(uri, function(data) {

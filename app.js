@@ -23,8 +23,12 @@ var cache = argv.no_cache ? null : new Cache({
 
 //GET /data/:URL
 app.get("/data", function(request, response) {
-  if (!request.query.url) {
-    response.send(usage());
+  if (!request.query.url || /^\s*$/.test(request.query.url)) {
+    if (request.query.callback) {
+      response.send(jsonp(request.query.callback, request.query.url, usage()));
+    } else {
+      response.send(usage());
+    }
     return;
   }
   var page = new Page({
@@ -80,7 +84,7 @@ function jsonp(callback, url, data) {
 }
 
 function usage() {
-  return 'usage: GET http://'+argv.host+'/data?url=[url]\n';
+  return 'usage: GET http://'+argv.host+'/data?url=[url]';
 }
 
 function setCacheHeaders(response) {

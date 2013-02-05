@@ -51,6 +51,12 @@ var Peekr = function() {
   };
 
   function popoverEl(targetEl, data, e) {
+    var html = dataHtml(data);
+    var div = position(html, targetEl, e);
+    return div;
+  }; 
+
+  function dataHtml(data) {
     var html = "";
     if (data.image && data.title && data.description)
       html = popoverElFull(data);
@@ -60,9 +66,8 @@ var Peekr = function() {
       html = popoverElTitleDesc(data);
     else if (data.title) 
       html = popoverElTitle(data);
-    var div = position(html, targetEl, e);
-    return div;
-  }; 
+    return html;
+  }
 
   function popoverElFull(data) {
     var html = '<div id="_peekr_container" class="_peekr_container _peekr_container_full">';
@@ -243,6 +248,7 @@ var Peekr = function() {
   }
 
   return {
+    dataHtml: dataHtml,
     attach: attach,
     open: open,
     data: data
