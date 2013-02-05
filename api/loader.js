@@ -120,24 +120,25 @@ var Peekr = function() {
   //topLeft, topRight, bottomLeft, bottomRight
   function positionQuadrant(div, targetEl, e) {
     var quadrant = getQuadrant(div, targetEl, e);
+    var peekrContainer = div.getElementsByTagName("div")[0];
     var offset = getOffset(targetEl);
-    var x = e ? (e.clientX - 30) : offset.left
+    var x = e ? (e.clientX - 30) : offset.left;
     if (quadrant == 'bottom_left') {
       div.style.left = x + "px";
       div.style.top = offset.top + 30 + "px";
-      getPeekrContainer().className += " _peekr_arrow_bottom_left";
+      peekrContainer.className += " _peekr_arrow_bottom_left";
     } else if (quadrant == 'bottom_right') {
       div.style.left = x - div.clientWidth + 60 + "px";
       div.style.top = offset.top + 30 + "px";
-      getPeekrContainer().className += " _peekr_arrow_bottom_right";
+      peekrContainer.className += " _peekr_arrow_bottom_right";
     } else if (quadrant == 'top_right') {
       div.style.left = x - div.clientWidth + 60 + "px";
       div.style.top = offset.top - 12 - div.clientHeight + "px";
-      getPeekrContainer().className += " _peekr_arrow_top_right";
+      peekrContainer.className += " _peekr_arrow_top_right";
     } else {
       div.style.left = x + "px";
       div.style.top = offset.top - 12 - div.clientHeight + "px";
-      getPeekrContainer().className += " _peekr_arrow_top_left";
+      peekrContainer.className += " _peekr_arrow_top_left";
     }
   };
 
