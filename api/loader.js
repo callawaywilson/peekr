@@ -211,7 +211,15 @@ var Peekr = function() {
         document.body.parentNode || document.body).scrollTop;
     return {scrollTop: scrollTop, scrollLeft: scrollLeft};
   }
-  
+
+  function bindEvent(el, eventName, eventHandler) {
+    if (el.addEventListener) {
+      el.addEventListener(eventName, eventHandler, false); 
+    } else if (el.attachEvent) {
+      el.attachEvent('on'+eventName, eventHandler);
+    }
+  }
+    
 
   //Public Methods:
 
@@ -225,8 +233,8 @@ var Peekr = function() {
       isOver = false;
       setTimeout(function() {if (!isOver) removePopover()}, 200);
     }
-    el.addEventListener("mouseover", over, false);
-    el.addEventListener("mouseout", out, false);
+    bindEvent(el, "mouseover", over);
+    bindEvent(el, "mouseout", out);
   };
 
   var open = function(el, e) {
