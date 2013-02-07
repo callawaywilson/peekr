@@ -170,7 +170,6 @@ var Peekr = function() {
   };
 
   function image(data) {
-    console.log(data.image);
     if (data.image && data.image.indexOf("\/\/") == 0) return "http:" + data.image;
     if (data.image && data.image.indexOf("http") == 0) return data.image;
     function hostname(data) {
