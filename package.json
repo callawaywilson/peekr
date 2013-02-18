@@ -1,19 +1,17 @@
 {
   "name": "peekr",
-  "description": "open graph attributes hover preview",
-  "version": "0.0.1",
+  "description": "open graph attributes hover preview and data services",
+  "version": "0.0.2",
   "private": true,
   "dependencies": {
     "express": "3.x",
     "underscore": "1.4.3",
     "request": "2.12.0",
-    "cheerio": "0.10.5",
     "optimist": "0.3.5",
     "ejs": "0.8.3",
     "uglify-js": "2.2.3",
-    "ttl-lru-cache": "0.0.2",
     "newrelic": "0.9.x",
-    "entities" : "0.x"
+    "sax" : "0.5.1"
   },
   "engines": {
     "node": "0.8.x",

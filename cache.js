@@ -63,7 +63,7 @@ module.exports = exports = function(options) {
         // console.log("CACHE Miss: [" + url + "]");
         callback(null);
       } else {
-        console.log("CACHE GET Error url:[" + url + "]: " + error);
+        console.log("CACHE GET error url:[" + url + "]: " + error);
         callback(null);
       }
     })

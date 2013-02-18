@@ -1,6 +1,6 @@
 var request = require('request')
   , url = require('url')
-  , cheerio = require('cheerio')
+  , Parser = require('./parser.js')
 
 module.exports = exports = function(options) {
 
@@ -8,134 +8,51 @@ module.exports = exports = function(options) {
   this.options = options;
 
   this.data = function(callback) {
-    var uri = this.options.url;
-    if (uri.indexOf("http") != 0) uri = "http://" + uri;
-    var headers = this.options.headers;
-    if (cache) {
-      cache.get(uri, function(data) {
-        if (data) callback(data);
-        else getFromUrl(uri, headers, callback);
-      })
-    } else {
-      getFromUrl(uri, headers, callback);
+    try {
+      var uri = this.options.url;
+      if (uri.indexOf("http") != 0) uri = "http://" + uri;
+      var headers = this.options.headers;
+      if (cache) {
+        cache.get(uri, function(data) {
+          if (data) callback(data);
+          else getFromUrl(uri, headers, callback);
+        })
+      } else {
+        getFromUrl(uri, headers, callback);
+      }
+    } catch(err) {
+      console.log("ERROR url:["+this.options.url+"]", err);
+      callback({
+        error: "Error handling request",
+        url: this.options.url
+      });
     }
   }
 
+
   function getFromUrl(url, headers, callback) {  
     var start = new Date().getTime();
-    request({
-      uri: url,
-      headers: headers
-    }, function (error, response, body) {
+    var parser = new Parser();
+    parser.parse(request({uri: url, headers: headers}), {},
+    function(data) {
       var elapsed = new Date().getTime() - start;
-      if (!error && response.statusCode == 200) {
-        var doc = cheerio.load(body);
-        var data = getOG(doc);
-        if (data.url == null) data.url = response.request.href;
+      if (!data.error) {
         callback(data);
         console.log("FETCH url:[" + url + "] in " + elapsed + "ms")
         if (cache && data) cache.put(url, data);
       } else {
-        var data = {
-          error: 'Could not load URL', 
-          url: (response ? response.request.href : null)
-        }
         callback(data);
+        if (errorCacheable(data) && cache) cache.put(url, data);
         console.log("FETCH error url:[" + url + "] " + 
-          "HTTP " + (response ? response.statusCode : 'no response') + 
-          " '" + error + "' in " + elapsed + "ms");
-        if (errorCacheable(response)) cache.put(url, data);
+          (data.statusCode ? data.statusCode : "") + 
+          " '" + data.error + "' in " + elapsed + "ms");
       }
     });
+
   }
 
-  function getAttr(el, attribute) {
-    for (var i = 0; i < el.length; i++) {
-      if (el[i].attribs[attribute]) return el[i].attribs[attribute];
-    }
-  } 
-
-  function getOG($) {
-    var data = {}
-      , ns = "og"
-    $('meta').each(function (index, el) {
-      var prop = $(this).attr("property"), key, value;
-      if (prop && prop.substring(0, ns.length) === ns) {
-        key = prop.substring(ns.length + 1);
-        value = getAttr($(this), "content");
-        data[key] = value;
-      }
-    });
-    return getMissing($, data);
-  }
-
-  function getMissing($, data) {
-    if (data.title == null) data.title = getTitle($);
-    if (data.image == null) data.image = getImage($);
-    if (data.description == null) data.description = getDescription($);
-    return data;
-  }
-
-  function getTitle($) {
-    return $("head title").text();
-  }
-  function getImage($) {
-    var src = null;
-    $('link').each(function() {
-      if (elAttrEq($(this), 'rel', 'image_src')) 
-        src = $(this).attr('href');
-      else if (elAttrEq($(this), 'rel', 'image')) 
-        src = $(this).attr('href');
-      else if (elAttrEq($(this), 'rel', 'apple-touch-icon')) 
-        src = $(this).attr('href');
-      else if (elAttrEq($(this), 'rel', 'apple-touch-icon-precomposed')) 
-        src = $(this).attr('href');
-    });
-    if (src == null) {
-      $('meta').each(function() {
-        if (elAttrEq($(this), 'itemprop', 'image')) 
-          src = $(this).attr('content');
-        else if (elAttrEq($(this), 'name', 'image')) 
-          src = $(this).attr('content');
-        else if (elAttrEq($(this), 'link', 'image')) 
-          src = $(this).attr('content');
-      })
-    }
-    return src;
-  }
-  function getDescription($) {
-    var desc = null;
-    $('meta').each(function() {
-      if (elAttrEq($(this), 'name', 'description')) 
-        desc = getAttr($(this), "content");
-    })
-    if (!desc) {
-      desc = findContent(['p', 'h1', 'h2', 'h3'], $);
-    }
-    return desc;
-  }
-
-  function elAttrEq(el, attrName, attrValue) {
-    return el.attr(attrName) &&
-      el.attr(attrName).toLowerCase &&
-      el.attr(attrName).toLowerCase() == attrValue.toLowerCase();
-  }
-
-  function findContent(selectors, $) {
-    for (var i = 0; i < selectors.length; i++) {
-      var els = $(selectors[i]);
-      if (els.length > 0) {
-        var t = els.first().text();
-        if (t && t.length > 0) return t.substring(0,300);
-      }
-    }
-  }
-
-  function errorCacheable(response) {
-    return response && (
-        response.statusCode == 403 ||
-        response.statusCode == 404
-      );
+  function errorCacheable(data) {
+    return data && (data.statusCode == 403 || data.statusCode == 404);
   }
 
 }
