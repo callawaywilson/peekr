@@ -11,14 +11,16 @@ module.exports = exports = function(options) {
     try {
       var uri = this.options.url;
       if (uri.indexOf("http") != 0) uri = "http://" + uri;
+      var href = url.parse(uri);
+      if (!href.host || !href.pathname) throw "Invalid URL";
       var headers = this.options.headers;
       if (cache) {
-        cache.get(uri, function(data) {
+        cache.get(href, function(data) {
           if (data) callback(data);
-          else getFromUrl(uri, headers, callback);
+          else getFromUrl(href, headers, callback);
         })
       } else {
-        getFromUrl(uri, headers, callback);
+        getFromUrl(href, headers, callback);
       }
     } catch(err) {
       console.log("ERROR url:["+this.options.url+"]", err);
