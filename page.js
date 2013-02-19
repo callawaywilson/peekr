@@ -15,12 +15,12 @@ module.exports = exports = function(options) {
       if (!href.host || !href.pathname) throw "Invalid URL";
       var headers = this.options.headers;
       if (cache) {
-        cache.get(href, function(data) {
+        cache.get(uri, function(data) {
           if (data) callback(data);
-          else getFromUrl(href, headers, callback);
+          else getFromUrl(uri, headers, callback);
         })
       } else {
-        getFromUrl(href, headers, callback);
+        getFromUrl(uri, headers, callback);
       }
     } catch(err) {
       console.log("ERROR url:["+this.options.url+"]", err);
