@@ -1,4 +1,5 @@
 var sax = require("sax")
+sax.MAX_BUFFER_LENGTH = 8 * 1024 * 1024;
 
 module.exports = exports = function(options) {
 
@@ -9,7 +10,7 @@ module.exports = exports = function(options) {
     var description = null
     var images = [] //src, size
 
-    var saxStream = sax.createStream(false, options)
+    var saxStream = sax.createStream(false, options);
 
     saxStream.onopentag = function (node) {
       // opened a tag.  node has "name" and "attributes"
@@ -85,7 +86,8 @@ module.exports = exports = function(options) {
     var src = null, size = 0
     if (node.name == 'LINK') {
       var rel = node.attributes['REL'] 
-      if (rel == 'image_src' || rel == 'image' || rel.indexOf('apple-touch-icon') > -1) 
+      if (rel && 
+        (rel == 'image_src' || rel == 'image' || rel.indexOf('apple-touch-icon') > -1)) 
         src = node.attributes['HREF']
     } else if (node.name == 'META') {
       if ('image' == node.attributes['ITEMPROP'] ||
