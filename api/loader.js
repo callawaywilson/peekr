@@ -25,6 +25,8 @@ var Peekr = function() {
   var width = 300;
   var height = 120;
 
+  var compat = !!window.atob;
+
   function fetch(id, href, callback) {
     var callbackName = callbackPrefix + id;
     window[callbackName] = callback;
@@ -68,12 +70,24 @@ var Peekr = function() {
       html = popoverElTitle(data);
     return html;
   }
+  function imageStyle(data) {
+    if (compat) {
+      return "background-image: url('"+image(data)+"');";
+    } else {
+      return "filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(" +
+        "src='"+image(data)+"',"+
+        "sizingMethod='scale');"+
+        "-ms-filter: \"progid:DXImageTransform.Microsoft.AlphaImageLoader("+
+        "src='"+image(data)+"',"+
+        "sizingMethod='scale');\"";
+    }
+  }
 
   function popoverElFull(data) {
     var html = '<div id="_peekr_container" class="_peekr_container _peekr_container_full">';
     html += '<div class="_peekr_image_container">';
     html += '<div class="_peekr_image"';
-    html += 'style="background-image: url(\''+image(data)+'\');"></div></div>';
+    html += 'style="'+imageStyle(data)+'"></div></div>';
     html += '<div class="_peekr_title">'+data.title+'</div>';
     html += '<div class="_peekr_url">'+data.url+'</div>';
     html += '<div class="_peekr_description">'+data.description+'</div>';
@@ -84,7 +98,7 @@ var Peekr = function() {
     var html = '<div id="_peekr_container" class="_peekr_container _peekr_container_image_title">';
     html += '<div class="_peekr_image_container">';
     html += '<div class="_peekr_image"';
-    html += 'style="background-image: url(\''+image(data)+'\');"></div></div>';
+    html += 'style="'+imageStyle(data)+'"></div></div>';
     html += '<div class="_peekr_title">'+data.title+'</div>';
     html += '<div class="_peekr_url">'+data.url+'</div>';
     return html;
@@ -122,30 +136,30 @@ var Peekr = function() {
     var quadrant = getQuadrant(div, targetEl, e);
     var peekrContainer = div.getElementsByTagName("div")[0];
     var offset = getOffset(targetEl);
-    var x = e ? (e.clientX - 30) : offset.left;
+    var x = (e && e.clientX) ? (e.clientX - 30) : offset.left;
     if (quadrant == 'bottom_left') {
       div.style.left = x + "px";
       div.style.top = offset.top + 30 + "px";
-      peekrContainer.className += " _peekr_arrow_bottom_left";
+      if (compat) peekrContainer.className += " _peekr_arrow_bottom_left";
     } else if (quadrant == 'bottom_right') {
       div.style.left = x - div.clientWidth + 60 + "px";
       div.style.top = offset.top + 30 + "px";
-      peekrContainer.className += " _peekr_arrow_bottom_right";
+      if (compat) peekrContainer.className += " _peekr_arrow_bottom_right";
     } else if (quadrant == 'top_right') {
       div.style.left = x - div.clientWidth + 60 + "px";
       div.style.top = offset.top - 12 - div.clientHeight + "px";
-      peekrContainer.className += " _peekr_arrow_top_right";
+      if (compat) peekrContainer.className += " _peekr_arrow_top_right";
     } else {
       div.style.left = x + "px";
       div.style.top = offset.top - 12 - div.clientHeight + "px";
-      peekrContainer.className += " _peekr_arrow_top_left";
+      if (compat) peekrContainer.className += " _peekr_arrow_top_left";
     }
   };
 
   function getQuadrant(div, targetEl, e) {
     var offset = getOffset(targetEl);
     var scroll = getScroll();
-    var x = e ? (e.clientX - 30) : offset.left
+    var x = (e && e.clientX) ? (e.clientX - 30) : offset.left
     var pos = "top_"
     if (offset.top - 12 - div.clientHeight - 10 - scroll.scrollTop < 0) {
       pos = 'bottom_';
@@ -227,7 +241,11 @@ var Peekr = function() {
     var isOver = false;
     var over = function(e) {
       isOver = true;
-      setTimeout(function() {if (isOver) open(el, e)}, 200);
+      var ev = {
+        clientX: e.clientX,
+        clientY: e.clientY
+      };
+      setTimeout(function() {if (isOver) open(el, ev)}, 200);
     }
     var out = function() {
       isOver = false;
