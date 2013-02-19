@@ -43,13 +43,16 @@ app.get("/data", function(request, response) {
       'Cache-Control': request.headers['cache-control']
     }
   });
+  if (request.query.callback) {
+    response.setHeader("Content-Type", "text/javascript");
+  } else {
+    response.setHeader("Content-Type", "application/json");
+  }
   page.data(function(data) {
     if (data && data.url && !data.error) setCacheHeaders(response); // Cache if has URL parameter
     if (request.query.callback) {
-      response.setHeader("Content-Type", "text/javascript");
       response.send(jsonp(request.query.callback, request.query.url, data));
     } else {
-      response.setHeader("Content-Type", "application/json");
       response.send(JSON.stringify(data));
     }
   })
