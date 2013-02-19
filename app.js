@@ -1,9 +1,3 @@
-if (process.env.NODEFLY_APPLICATION_KEY)
-  require('nodefly').profile(
-    process.env.NODEFLY_APPLICATION_KEY,
-    ['peekr','Heroku']
-  );
-
 var express = require('express')
   , fs = require('fs')
   , Page = require("./page.js")
