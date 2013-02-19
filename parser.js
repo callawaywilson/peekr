@@ -23,9 +23,15 @@ module.exports = exports = function(options) {
       if (node.name == 'META' && node.attributes['NAME'] &&
           node.attributes['NAME'].toLowerCase() == 'description') 
         description = node.attributes['CONTENT']
+
+      //Abort stream on body tag (only care about header)
+      if (node.name == 'BODY') stream.abort();
     }
     saxStream.onclosetag = function (name) {
       if (name == 'TITLE') isTitle = false;
+      //Abort stream when head is done
+      if (name == 'HEAD') stream.abort();
+
     }
     saxStream.ontext = function (t) {
       if (isTitle) title = t
@@ -51,6 +57,15 @@ module.exports = exports = function(options) {
         })
       }
     }
+
+    stream.on('response', function(response) {
+      //Abort if not text/html
+      contentType = response.headers['content-type']
+      if (!contentType || contentType.indexOf('text/html') < 0) {
+        stream.abort();
+        console.log("ABORT url:["+stream.href+"]: "+contentType);
+      }
+    })
 
     stream.on('error', function (err) {
       callback({

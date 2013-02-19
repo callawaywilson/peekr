@@ -36,7 +36,7 @@ app.get("/data", function(request, response) {
     url: request.query.url,
     headers: {
       'User-Agent': 'facebookexternalhit',
-      'Accept': request.headers['accept'],
+      'Accept': 'text/html',
       'Accept-Language': request.headers['accept-language'],
       'Cache-Control': request.headers['cache-control']
     }
