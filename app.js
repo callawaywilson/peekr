@@ -20,6 +20,7 @@ var cache = argv.no_cache ? null : new Cache({
   ttl: cache_ttl,
   timeout: process.env.IRON_CACHE_TIMEOUT || argv.cache_timeout
 });
+var request_timeout = process.env.REQUEST_TIMEOUT || argv.request_timeout || (20 * 1000);
 
 //GET /data/:URL
 app.get("/data", function(request, response) {
@@ -34,6 +35,7 @@ app.get("/data", function(request, response) {
   var page = new Page({
     cache: cache,
     url: request.query.url,
+    timeout: request_timeout,
     headers: {
       'User-Agent': 'facebookexternalhit',
       'Accept': 'text/html',

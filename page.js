@@ -33,7 +33,11 @@ module.exports = exports = function(options) {
   function getFromUrl(url, headers, callback) {  
     var start = new Date().getTime();
     var parser = new Parser();
-    parser.parse(request({uri: url, headers: headers}), {},
+    parser.parse(request({
+      uri: url, 
+      headers: headers,
+      timeout: options.timeout
+    }), {},
     function(data) {
       var elapsed = new Date().getTime() - start;
       if (!data.error) {
