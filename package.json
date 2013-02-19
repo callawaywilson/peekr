@@ -10,7 +10,7 @@
     "optimist": "0.3.5",
     "ejs": "0.8.3",
     "uglify-js": "2.2.3",
-    "newrelic": "0.9.x",
+    "nodefly": "stable",
     "sax" : "0.5.1"
   },
   "engines": {
