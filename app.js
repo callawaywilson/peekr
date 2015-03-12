@@ -34,7 +34,7 @@ app.get("/data", function(request, response) {
     url: request.query.url,
     timeout: request_timeout,
     headers: {
-      'User-Agent': 'facebookexternalhit',
+      'User-Agent': 'peekrbot',
       'Accept': 'text/html',
       'Accept-Language': request.headers['accept-language'],
       'Cache-Control': request.headers['cache-control']
