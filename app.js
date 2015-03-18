@@ -76,8 +76,6 @@ app.use(function(req, res){
   res.send(usage(), 404)
 })
 
-//Error handler
-app.use(errorHandler);
 
 // Listen on environment PORT, argument, or 5000.
 var port = process.env.PORT || (argv.port || 5000);
@@ -106,7 +104,3 @@ function getLoaderJS() {
   return UglifyJS.minify(loader_js, {fromString:true}).code;
 }
 
-function errorHandler(err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err });
-}
