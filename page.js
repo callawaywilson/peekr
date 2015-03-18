@@ -38,7 +38,7 @@ module.exports = exports = function(options) {
     parser.parse(request({
       url: url, 
       headers: headers,
-      timeout: (options.timeout || 10)
+      timeout: (parseInt(options.timeout, 10) || 10000)
     }), {},
     function(data) {
       var elapsed = new Date().getTime() - start;
