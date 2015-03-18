@@ -6,7 +6,7 @@
   "dependencies": {
     "express": "4.12.x",
     "underscore": "1.8.x",
-    "request": "git://github.com/callawaywilson/request.git#master",
+    "request": "2.53.0",
     "optimist": "0.6.x",
     "ejs": "2.3.x",
     "uglify-js": "2.4.x",
